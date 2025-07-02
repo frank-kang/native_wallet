@@ -2,15 +2,18 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { sql } from './config/db.js'; // Adjust the path as necessary
 import { rateLimiter } from './middleware/rateLimiter.js';
-import transactionsRoute from './routes/transactionsRoute.js'; // Adjust the path as necessary
+import job from './config/cron.js'; // Import the cron job
+import transactionsRoute from './routes/transactions.js'; // Import the transactions route
 
+dotenv.config(); // Load environment variables from .env file
 const app = express();
 
+if(process.env.NODE_ENV === "production") job.start(); // Start the cron job if in production environment
+ 
+//middleware
 app.use(rateLimiter); // Apply rate limiting middleware
 app.use(express.json()); // Middleware to parse JSON bodies
 
-
-dotenv.config();
 const PORT = process.env.PORT || 5001;
 
 async function initDB() {
@@ -30,6 +33,10 @@ async function initDB() {
         
     }
 }
+
+app.get("/api/health", (req, res) => {
+    res.status(200).json({ message: "API is healthy" });
+});
 
 app.use('/api/transactions', transactionsRoute); // Use the transactions route
 
