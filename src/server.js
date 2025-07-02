@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { sql } from './config/db.js'; // Adjust the path as necessary
 import { rateLimiter } from './middleware/rateLimiter.js';
 import job from './config/cron.js'; // Import the cron job
-import transactionsRoute from './routes/transactions.js'; // Import the transactions route
+import transactionsRoute from './routes/transactionsRoute.js'; // Import the transactions route
 
 dotenv.config(); // Load environment variables from .env file
 const app = express();
